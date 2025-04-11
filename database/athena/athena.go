@@ -144,13 +144,8 @@ func (f *athenaAPI) Run(migration io.Reader) error {
 func (f *athenaAPI) SetVersion(version int, dirty bool) error {
 
 	// athena doesn't support transactions and hence it has to be done in two steps behind the lock
-	if err := f.Lock(); err != nil {
-		return err
-	}
 
-	defer f.Unlock()
-
-	oldVersion, dirty, err := f.Version()
+	oldVersion, _, err := f.Version()
 	if err != nil {
 		return database.Error{OrigErr: err, Err: "SetVersion failed"}
 	}
